@@ -1,0 +1,74 @@
+data:
+  symbol: BTCUSDT
+  start_date: "2024-01-01"
+  end_date: "2024-03-31"
+  train_split: 0.70
+  val_split: 0.15
+  test_split: 0.15
+
+execution:
+  total_quantity_btc: 10.0
+  time_horizon_seconds: 3600
+  num_slices: 60
+  min_slice_fraction: 0.005
+  max_slice_fraction: 0.30
+
+impact_model:
+  alpha: 0.6
+  eta_multiplier: 0.1
+  gamma_multiplier: 0.01
+
+agents:
+  linucb:
+    alpha_exploration: 1.0
+    d_features: 18
+    warm_start_from_ac: true
+    warm_start_episodes: 20
+  thompson:
+    prior_variance: 1.0
+    d_features: 18
+    warm_start_from_ac: true
+    warm_start_episodes: 20
+  exp3:
+    gamma: 0.1
+    d_features: 18
+    warm_start_from_ac: true
+    warm_start_episodes: 20
+  kernel_ucb:
+    alpha_exploration: 1.0
+    d_features: 18
+    kernel_bandwidth: 1.0
+    max_history: 500
+    warm_start_from_ac: true
+    warm_start_episodes: 20
+  pov:
+    target_participation_rate: 0.10
+  regime_switch_ac:
+    calm_risk_aversion: 0.05
+    stressed_risk_aversion: 0.50
+    vol_ratio_threshold: 1.5
+    hysteresis_steps: 3
+  meta_agent:
+    alpha_meta: 0.5
+    warm_start_episodes: 10
+  thompson_ac_hybrid:
+    prior_variance: 1.0
+    warm_start_from_ac: true
+    warm_start_episodes: 20
+  corral:
+    gamma: null
+    n_episodes: 200
+
+features:
+  volatility_window_short_s: 60
+  volatility_window_long_s: 300
+  volume_window_s: 30
+  ofi_window_s: 10
+  normalization: zscore
+  use_interaction_features: true
+  d_features: 18
+
+evaluation:
+  n_episodes: 200
+  metrics: [IS, vwap_slippage, participation_rate, shortfall_std, timing_risk_bps]
+  random_seed: 42
