@@ -41,6 +41,7 @@ config/feature_stats.json
 # Generated evaluation outputs
 evaluation/results/*.json
 !evaluation/results/.gitkeep
+!evaluation/results/sample_batch_results.json
 
 # Notebook outputs
 *.nbconvert.ipynb

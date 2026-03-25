@@ -48,6 +48,16 @@ The project combines data ingestion, feature engineering, market replay, executi
 - Plain-language guidance for interpreting key metrics
 - Agent guide describing how each policy works
 
+## Dashboard Preview
+
+![Execution Replay Studio controls and workspace](option_bar_for_testing.jpg)
+
+![Batch comparison implementation shortfall distribution](is_distribution.jpg)
+
+![Scorecard and regret summary](scorecard_regret.jpg)
+
+![Agent guide and descriptions](agent_description.jpg)
+
 ## System Architecture
 
 ```text
@@ -93,6 +103,10 @@ python -m pytest -q
 python -m streamlit run dashboard/app.py
 ```
 
+## Sample Artifact
+
+A curated demo batch result is included at [`evaluation/results/sample_batch_results.json`](evaluation/results/sample_batch_results.json). It contains a 60-episode dashboard batch run across 12 agents and can be used to review the dashboard in saved-results mode without generating a fresh batch first.
+
 ## Evaluation Metrics
 
 - `Implementation Shortfall (IS)`: execution cost relative to the arrival benchmark
@@ -100,6 +114,16 @@ python -m streamlit run dashboard/app.py
 - `Participation Rate`: how aggressively the order consumes market volume
 - `Win Rate vs Baselines`: how often an agent outperforms TWAP or AC on individual episodes
 - `Regret`: performance gap versus a reference policy
+
+## Example Findings
+
+The included sample batch artifact (`n_episodes = 60`) highlights several useful patterns from the current simulator configuration:
+
+1. `MetaAgent` produced the strongest mean implementation shortfall in the sample batch at roughly `-0.60 bps`, outperforming `TWAP` (`+0.08 bps`) and `VWAP` (`+0.48 bps`) on the batch average.
+2. `POV` and `MetaAgent` both posted negative mean shortfall with win rates above `50%` versus `TWAP`, suggesting that adaptive pacing can improve average execution quality in this replay window.
+3. `EXP3` and `KernelUCB` lagged the stronger agents in the sample batch, with positive mean shortfall and weaker win rates against `TWAP`, showing that not every adaptive method is automatically superior in this setting.
+4. `AC_Optimal` and `RegimeSwitchAC` matched exactly in the included sample, indicating that the selected regime logic did not materially alter the execution path for that replay window.
+5. The one-sided p-values versus `TWAP` remain far from conventional significance thresholds across the sample batch, so the artifact should be interpreted as exploratory evidence rather than a claim of statistically decisive outperformance.
 
 ## Engineering Characteristics
 
